@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animasi Surat dengan Isi Link</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="envelope" onclick="toggleMessage()">
+        <div class="flap"></div>
+        <div class="letter">
+            <div class="message-content">
+                <h2>Klik untuk Membuka Surat</h2>
+                <p>Isi dengan <a href="#" id="editableLink" contenteditable="true">link di sini</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleMessage() {
+            const envelope = document.querySelector('.envelope');
+            envelope.classList.toggle('open');
+        }
+    </script>
+</body>
+
+</html>
