@@ -1,12 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="id">
 <head>
-    <title>Princess</title>
+  <meta charset="UTF-8">
+  <title>Seseorang</title>
+  <style>
+    .notification {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #ffffff;
+      color: #000;
+      border-left: 5px solid #f9a825;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      padding: 15px 20px;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+      z-index: 9999;
+      display: none;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateY(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0%);
+        opacity: 1;
+      }
+    }
+  </style>
 </head>
-
 <body>
-    <h1>Princess Kang joki minta maaaff:'(</h1>
-</body>
+  <div class="notification" id="notifBox">
+    💖 10.000 dari <strong>Seseorang</strong> Kak Niccy Kak Niccyyy jangan lupa joki lagi di deepstoreid yaaa!!!
+  </div>
+  <audio id="notifSound" src="https://www.myinstants.com/media/sounds/discord-notification.mp3" preload="auto"></audio>
 
+  <script>
+    function showNotification() {
+      const notifBox = document.getElementById("notifBox");
+      const notifSound = document.getElementById("notifSound");
+
+      notifBox.style.display = "block";
+      notifSound.play();
+
+      setTimeout(() => {
+        notifBox.style.display = "none";
+      }, 10000);
+    }
+
+    // Tampilkan notifikasi 3 detik setelah masuk ke web
+    window.onload = function () {
+      setTimeout(showNotification, 1000);
+    };
+  </script>
+
+</body>
 </html>
