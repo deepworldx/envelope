@@ -1,142 +1,243 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Absen Harian Princess 💌</title>
-  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-  <script>
-    // ID dari EmailJS
-    const SERVICE_ID = "service_2urnb0p";
-    const TEMPLATE_ID = "template_48qiouv";
-    const PUBLIC_KEY = "rFoCQfEWoG7OucXfI";
-    (function(){ emailjs.init(PUBLIC_KEY); })();
-  </script>
-
   <style>
-    body {
-      font-family: Poppins, sans-serif;
-      background: #f4f7ff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
+    @keyframes fadeIn {
+      0% {opacity: 0; transform: scale(0.9);}
+      100% {opacity: 1; transform: scale(1);}
     }
-    .card {
+    @keyframes floatUp {
+      0% {transform: translateY(30px); opacity: 0;}
+      100% {transform: translateY(0); opacity: 1;}
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    h1 {
+      color: #fff;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    form {
       background: white;
       padding: 25px;
-      border-radius: 14px;
+      border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      width: 340px;
-      text-align: center;
+      width: 90%;
+      max-width: 420px;
+      border: 2px solid #ffc4d6;
+      animation: fadeIn 0.5s ease-in-out;
     }
-    input, select, textarea {
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      color: #ff6f91;
+    }
+    input, select, textarea, button {
       width: 100%;
-      margin-top: 10px;
       padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      border: 1px solid #ffbad2;
       font-size: 15px;
+      outline: none;
+    }
+    select {
+      background: #ffeef5;
+    }
+    textarea.storybox {
+      background: #fff0f7;
+      border: 2px dashed #ffa8c5;
+      resize: none;
+      min-height: 70px;
+    }
+    textarea.storybox::placeholder {
+      color: #ff7fa8;
+      font-style: italic;
     }
     button {
-      background: #007bff;
+      background: #ff6f91;
       color: white;
       border: none;
-      padding: 12px;
-      border-radius: 10px;
-      margin-top: 15px;
-      width: 100%;
-      font-size: 16px;
       cursor: pointer;
+      font-weight: bold;
+      transition: 0.2s;
     }
-    button:hover { background: #005fe6; }
-    .preview img { width: 100%; margin-top: 10px; border-radius: 8px; }
+    button:hover {
+      background: #ff4f70;
+      transform: scale(1.03);
+    }
+    #preview {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      border-radius: 15px;
+      margin-bottom: 10px;
+      display: none;
+      border: 2px solid #ffcce0;
+    }
+    .remove-btn {
+      display: none;
+      background: #999;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    /* 🎁 Pop-up bunga animasi */
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 192, 203, 0.8);
+      z-index: 999;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease-in-out;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+    .popup.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    .popup img {
+      width: 160px;
+      animation: floatUp 1s ease;
+    }
+    .popup h2 {
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      margin-top: 15px;
+      animation: floatUp 1s ease 0.2s both;
+      font-size: 22px;
+      text-align: center;
+    }
+    .popup button {
+      background: #fff;
+      color: #ff6f91;
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 10px;
+      border: 2px solid #ff6f91;
+      animation: floatUp 1s ease 0.4s both;
+    }
+    .popup button:hover {
+      background: #ff6f91;
+      color: white;
+    }
   </style>
 </head>
 <body>
 
-  <div class="card">
-    <h2>Absen Harian Princess 👑</h2>
+  <h1>💖 Absen Harian Princess 💖</h1>
 
-    <label>Mood Hari Ini:</label>
-    <select id="mood">
-      <option value="">Pilih...</option>
-      <option>Bahagia</option>
-      <option>Capek</option>
-      <option>Ngantuk</option>
-      <option>Tenang</option>
-      <option>Stres</option>
+  <form id="absenForm" action="https://formspree.io/f/mwpapkpq" method="POST" enctype="multipart/form-data">
+    
+    <label for="mood">Mood hari ini:</label>
+    <select id="mood" name="mood" required>
+      <option value="">-- Pilih mood kamu --</option>
+      <option>😷 Sakit</option>
+      <option>😢 Sedih</option>
+      <option>😊 Senang</option>
+      <option>🤩 Senang banget</option>
+      <option>😐 Biasa aja</option>
+      <option>😡 Kesal</option>
+      <option>😴 Lelah</option>
+      <option>🤔 Lainnya</option>
     </select>
 
-    <label>Makan Apa Hari Ini?</label>
-    <textarea id="makan" rows="2" placeholder="Contoh: Nasi goreng + teh manis"></textarea>
+    <label for="story">Gimana harinyaaa~ ceritain dikit sini prinseskuu 💌</label>
+    <textarea id="story" name="cerita" class="storybox" placeholder="Tulis singkat kejadian hari ini yaa, biar aku tahu gimana harinya princesskuu 💖"></textarea>
 
-    <label>Absen Foto 📸</label>
-    <input type="file" id="foto" accept="image/*">
-    <div id="preview" class="preview"></div>
+    <label for="makan">Makan apa hari ini 🍽️:</label>
+    <textarea id="makan" name="makan" rows="2" placeholder="Contoh: ayam geprek + es teh" required></textarea>
 
-    <button onclick="kirimAbsen()">Kirim Absen 💌</button>
+    <label for="foto">Absen foto 📸:</label>
+    <input type="file" id="foto" name="foto" accept="image/*" required>
+
+    <img id="preview" alt="Preview foto">
+    <div class="remove-btn" id="removeFoto">Hapus / Ganti Foto</div>
+
+    <button type="submit">Kirim ke Mdeepiee 💌</button>
+  </form>
+
+  <!-- 🎁 Popup bunga -->
+  <div class="popup" id="popup">
+    <img src="https://cdn-icons-png.flaticon.com/512/7654/7654825.png" alt="bunga">
+    <h2>🌸 Yeay! Mdeepiee kasih bunga buat prinses manis yang udah absen hari ini 💖</h2>
+    <button id="closePopup">Tutup 🌷</button>
   </div>
 
   <script>
-    let base64Foto = "";
+    const fotoInput = document.getElementById('foto');
+    const preview = document.getElementById('preview');
+    const removeBtn = document.getElementById('removeFoto');
+    const popup = document.getElementById('popup');
+    const closePopup = document.getElementById('closePopup');
 
-    document.getElementById("foto").addEventListener("change", function() {
-      const file = this.files[0];
-      if (!file) return;
-      if (file.size > 3 * 1024 * 1024) {
-        alert("⚠️ Foto terlalu besar! Maksimal 3MB ya.");
-        return;
+    fotoInput.addEventListener('change', () => {
+      const file = fotoInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+          removeBtn.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
       }
-
-      const reader = new FileReader();
-      reader.onloadend = function() {
-        base64Foto = reader.result;
-        document.getElementById("preview").innerHTML =
-          `<img src="${reader.result}" alt="preview"><br>
-           <button onclick="hapusFoto()" style="margin-top:8px;background:#ccc;color:#000;">Hapus Foto</button>`;
-      };
-      reader.readAsDataURL(file);
     });
 
-    function hapusFoto() {
-      base64Foto = "";
-      document.getElementById("foto").value = "";
-      document.getElementById("preview").innerHTML = "";
-    }
+    removeBtn.addEventListener('click', () => {
+      fotoInput.value = '';
+      preview.src = '';
+      preview.style.display = 'none';
+      removeBtn.style.display = 'none';
+    });
 
-    async function kirimAbsen() {
-      const mood = document.getElementById("mood").value;
-      const makan = document.getElementById("makan").value;
+    closePopup.addEventListener('click', () => {
+      popup.classList.remove('show');
+    });
 
-      if (!mood || !makan) {
-        alert("⚠️ Isi semua kolom dulu ya (mood & makan).");
-        return;
+    const form = document.getElementById('absenForm');
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        popup.classList.add('show');
+        form.reset();
+        preview.style.display = 'none';
+        removeBtn.style.display = 'none';
+      } else {
+        alert('Aduh, gagal kirim ke Mdeepiee 😿');
       }
-
-      const params = { mood, makan, foto: base64Foto };
-
-      try {
-        const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
-        alert("✅ Absen berhasil dikirim! Cek email kamu 💌");
-        hapusFoto();
-        document.getElementById("mood").value = "";
-        document.getElementById("makan").value = "";
-      } catch (err) {
-        // Tampilkan popup error detail
-        let detail = "Terjadi kesalahan saat mengirim 😢";
-        if (err.status === 401) detail = "❌ 401 Unauthorized:\nPublic key salah atau belum diaktifkan di EmailJS.";
-        else if (err.status === 404) detail = "❌ 404 Not Found:\nService ID atau Template ID tidak ditemukan.";
-        else if (err.status === 429) detail = "⚠️ 429 Quota Habis:\nKamu sudah mencapai batas pengiriman EmailJS gratis.";
-        else if (err.text?.includes("Missing")) detail = "⚠️ Variabel Template tidak cocok.\nPastikan di EmailJS ada {{mood}}, {{makan}}, {{foto}}.";
-        else if (err.text) detail = `⚠️ ${err.text}`;
-        else if (typeof err === "object") detail += "\n\n" + JSON.stringify(err, null, 2);
-
-        alert(detail);
-        console.error("Detail error:", err);
-      }
-    }
+    });
   </script>
+
 </body>
 </html>
