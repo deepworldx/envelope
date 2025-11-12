@@ -1,164 +1,142 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Absen Harian Princess Ku 💖</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Absen Harian Princess 💌</title>
   <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    (function() {
-      emailjs.init("rFoCQfEWoG7OucXfI");
-    })();
+    // ID dari EmailJS
+    const SERVICE_ID = "service_ti29gts";
+    const TEMPLATE_ID = "template_48qiouv";
+    const PUBLIC_KEY = "rFoCQfEWoG7OucXfI";
+    (function(){ emailjs.init(PUBLIC_KEY); })();
   </script>
+
   <style>
     body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg,#ffdee9,#b5fffc);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      min-height:100vh;
-      margin:0;
+      font-family: Poppins, sans-serif;
+      background: #f4f7ff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
     }
-    form {
-      background:white;
-      padding:30px;
-      border-radius:25px;
-      box-shadow:0 4px 25px rgba(0,0,0,0.1);
-      width:90%;
-      max-width:400px;
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      width: 340px;
+      text-align: center;
     }
-    h2 {
-      text-align:center;
-      color:#ff5c8a;
-      margin-bottom:20px;
-    }
-    label {
-      display:block;
-      margin-top:15px;
-      font-weight:500;
-      color:#333;
-    }
-    select, textarea, input[type=file] {
-      width:100%;
-      padding:10px;
-      border-radius:10px;
-      border:1px solid #ccc;
-      margin-top:8px;
-    }
-    .preview {
-      margin-top:10px;
-      text-align:center;
-    }
-    .preview img {
-      max-width:100%;
-      border-radius:12px;
-      margin-top:5px;
-    }
-    .btn-remove {
-      background:#ccc;
-      border:none;
-      color:#333;
-      border-radius:8px;
-      padding:6px 10px;
-      margin-top:5px;
-      cursor:pointer;
+    input, select, textarea {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
     }
     button {
-      margin-top:20px;
-      width:100%;
-      background:#ff5c8a;
-      color:white;
-      border:none;
-      padding:12px;
-      border-radius:10px;
-      font-size:16px;
-      cursor:pointer;
-      transition:0.3s;
+      background: #007bff;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      margin-top: 15px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
     }
-    button:hover {background:#ff3e70;}
+    button:hover { background: #005fe6; }
+    .preview img { width: 100%; margin-top: 10px; border-radius: 8px; }
   </style>
 </head>
 <body>
-  <form id="absenForm">
-    <h2>ABSEN HARIAN PRINSES KU 💖</h2>
 
-    <label for="mood">Mood hari ini:</label>
-    <select id="mood" required>
-      <option value="">Pilih mood...</option>
-      <option>Senang</option>
+  <div class="card">
+    <h2>Absen Harian Princess 👑</h2>
+
+    <label>Mood Hari Ini:</label>
+    <select id="mood">
+      <option value="">Pilih...</option>
+      <option>Bahagia</option>
       <option>Capek</option>
       <option>Ngantuk</option>
-      <option>Stres</option>
       <option>Tenang</option>
-      <option>Bahagia</option>
+      <option>Stres</option>
     </select>
 
-    <label for="makan">Makan apa hari ini?</label>
-    <textarea id="makan" rows="2" placeholder="Contoh: Nasi goreng + teh manis" required></textarea>
+    <label>Makan Apa Hari Ini?</label>
+    <textarea id="makan" rows="2" placeholder="Contoh: Nasi goreng + teh manis"></textarea>
 
-    <label for="foto">Absen foto:</label>
-    <input type="file" id="foto" accept="image/*" required>
+    <label>Absen Foto 📸</label>
+    <input type="file" id="foto" accept="image/*">
+    <div id="preview" class="preview"></div>
 
-    <div class="preview" id="preview"></div>
-
-    <button type="submit">Kirim Absen 💌</button>
-  </form>
+    <button onclick="kirimAbsen()">Kirim Absen 💌</button>
+  </div>
 
   <script>
-    const fileInput = document.getElementById("foto");
-    const previewDiv = document.getElementById("preview");
-    let currentBase64 = "";
+    let base64Foto = "";
 
-    // Tampilkan preview begitu user pilih foto
-    fileInput.addEventListener("change", () => {
-      const file = fileInput.files[0];
+    document.getElementById("foto").addEventListener("change", function() {
+      const file = this.files[0];
       if (!file) return;
+      if (file.size > 3 * 1024 * 1024) {
+        alert("⚠️ Foto terlalu besar! Maksimal 3MB ya.");
+        return;
+      }
 
       const reader = new FileReader();
       reader.onloadend = function() {
-        currentBase64 = reader.result;
-        previewDiv.innerHTML = `
-          <img src="${reader.result}" alt="Preview foto">
-          <br>
-          <button type="button" class="btn-remove" id="removeBtn">Hapus / Ganti Foto</button>
-        `;
-        document.getElementById("removeBtn").onclick = () => {
-          fileInput.value = "";
-          currentBase64 = "";
-          previewDiv.innerHTML = "";
-        };
+        base64Foto = reader.result;
+        document.getElementById("preview").innerHTML =
+          `<img src="${reader.result}" alt="preview"><br>
+           <button onclick="hapusFoto()" style="margin-top:8px;background:#ccc;color:#000;">Hapus Foto</button>`;
       };
       reader.readAsDataURL(file);
     });
 
-    // Kirim data ke email
-    document.getElementById("absenForm").addEventListener("submit", function(e){
-      e.preventDefault();
+    function hapusFoto() {
+      base64Foto = "";
+      document.getElementById("foto").value = "";
+      document.getElementById("preview").innerHTML = "";
+    }
 
-      if(!currentBase64){
-        alert("Upload foto dulu ya 💖");
+    async function kirimAbsen() {
+      const mood = document.getElementById("mood").value;
+      const makan = document.getElementById("makan").value;
+
+      if (!mood || !makan) {
+        alert("⚠️ Isi semua kolom dulu ya (mood & makan).");
         return;
       }
 
-      const data = {
-        mood: document.getElementById("mood").value,
-        makan: document.getElementById("makan").value,
-        foto: currentBase64
-      };
+      const params = { mood, makan, foto: base64Foto };
 
-      emailjs.send("service_ti29gts", "template_48qiouv", data)
-      .then(() => {
-        alert("Absen terkirim ke email kamu 💖");
-        e.target.reset();
-        previewDiv.innerHTML = "";
-        currentBase64 = "";
-      })
-      .catch(err => {
-        console.error(err);
-        alert("Terjadi kesalahan saat mengirim.");
-      });
-    });
+      try {
+        const response = await emailjs.send(SERVICE_ID, TEMPLATE_ID, params);
+        alert("✅ Absen berhasil dikirim! Cek email kamu 💌");
+        hapusFoto();
+        document.getElementById("mood").value = "";
+        document.getElementById("makan").value = "";
+      } catch (err) {
+        // Tampilkan popup error detail
+        let detail = "Terjadi kesalahan saat mengirim 😢";
+        if (err.status === 401) detail = "❌ 401 Unauthorized:\nPublic key salah atau belum diaktifkan di EmailJS.";
+        else if (err.status === 404) detail = "❌ 404 Not Found:\nService ID atau Template ID tidak ditemukan.";
+        else if (err.status === 429) detail = "⚠️ 429 Quota Habis:\nKamu sudah mencapai batas pengiriman EmailJS gratis.";
+        else if (err.text?.includes("Missing")) detail = "⚠️ Variabel Template tidak cocok.\nPastikan di EmailJS ada {{mood}}, {{makan}}, {{foto}}.";
+        else if (err.text) detail = `⚠️ ${err.text}`;
+        else if (typeof err === "object") detail += "\n\n" + JSON.stringify(err, null, 2);
+
+        alert(detail);
+        console.error("Detail error:", err);
+      }
+    }
   </script>
 </body>
 </html>
