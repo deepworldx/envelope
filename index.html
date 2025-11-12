@@ -187,57 +187,75 @@
     <h2>🌸 Yeay! Mdeepiee kasih bunga buat prinses manis yang udah absen hari ini 💖</h2>
     <button id="closePopup">Tutup 🌷</button>
   </div>
+<script>
+  const fotoInput = document.getElementById('foto');
+  const preview = document.getElementById('preview');
+  const removeBtn = document.getElementById('removeFoto');
+  const popup = document.getElementById('popup');
+  const closePopup = document.getElementById('closePopup');
 
-  <script>
-    const fotoInput = document.getElementById('foto');
-    const preview = document.getElementById('preview');
-    const removeBtn = document.getElementById('removeFoto');
-    const popup = document.getElementById('popup');
-    const closePopup = document.getElementById('closePopup');
+  fotoInput.addEventListener('change', () => {
+    const file = fotoInput.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+        removeBtn.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
-    fotoInput.addEventListener('change', () => {
-      const file = fotoInput.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = e => {
-          preview.src = e.target.result;
-          preview.style.display = 'block';
-          removeBtn.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
+  removeBtn.addEventListener('click', () => {
+    fotoInput.value = '';
+    preview.src = '';
+    preview.style.display = 'none';
+    removeBtn.style.display = 'none';
+  });
 
-    removeBtn.addEventListener('click', () => {
-      fotoInput.value = '';
-      preview.src = '';
-      preview.style.display = 'none';
-      removeBtn.style.display = 'none';
-    });
+  closePopup.addEventListener('click', () => {
+    popup.classList.remove('show');
+  });
 
-    closePopup.addEventListener('click', () => {
-      popup.classList.remove('show');
-    });
+  const form = document.getElementById('absenForm');
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    const formData = new FormData(form);
 
-    const form = document.getElementById('absenForm');
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      const formData = new FormData(form);
+    try {
       const response = await fetch(form.action, {
         method: form.method,
         body: formData,
         headers: { 'Accept': 'application/json' }
       });
+
+      // 🩷 Debug output ke console
+      console.log("📤 Sending data to:", form.action);
+      console.log("📥 Response status:", response.status);
+
       if (response.ok) {
         popup.classList.add('show');
         form.reset();
         preview.style.display = 'none';
         removeBtn.style.display = 'none';
       } else {
-        alert('Aduh, gagal kirim ke Mdeepiee 😿');
+        const errorText = await response.text();
+        console.error("❌ Formspree response:", errorText);
+
+        // tampilkan alert detail error
+        alert(
+          "❌ Gagal kirim ke Mdeepiee 😿\n\n" +
+          "Kode Status: " + response.status + "\n\n" +
+          "Isi Error:\n" + errorText
+        );
       }
-    });
-  </script>
+    } catch (err) {
+      console.error("⚠️ Fetch error:", err);
+      alert("⚠️ Error koneksi atau script:\n" + err.message);
+    }
+  });
+</script>
 
 </body>
 </html>
