@@ -1,61 +1,164 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Seseorang</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Absen Harian Princess Ku 💖</title>
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <script>
+    (function() {
+      emailjs.init("rFoCQfEWoG7OucXfI");
+    })();
+  </script>
   <style>
-    .notification {
-      position: fixed;
-      bottom: 80px;
-      right: 80px;
-      background-color: #ffffff;
-      color: #000;
-      border-left: 5px solid #f9a825;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      padding: 100px 105px;
-      border-radius: 8px;
-      font-family: Arial, sans-serif;
-      z-index: 9999;
-      display: none;
-      animation: slideIn 0.5s ease-out;
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg,#ffdee9,#b5fffc);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+      margin:0;
     }
-
-    @keyframes slideIn {
-      from {
-        transform: translateY(100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0%);
-        opacity: 1;
-      }
+    form {
+      background:white;
+      padding:30px;
+      border-radius:25px;
+      box-shadow:0 4px 25px rgba(0,0,0,0.1);
+      width:90%;
+      max-width:400px;
     }
+    h2 {
+      text-align:center;
+      color:#ff5c8a;
+      margin-bottom:20px;
+    }
+    label {
+      display:block;
+      margin-top:15px;
+      font-weight:500;
+      color:#333;
+    }
+    select, textarea, input[type=file] {
+      width:100%;
+      padding:10px;
+      border-radius:10px;
+      border:1px solid #ccc;
+      margin-top:8px;
+    }
+    .preview {
+      margin-top:10px;
+      text-align:center;
+    }
+    .preview img {
+      max-width:100%;
+      border-radius:12px;
+      margin-top:5px;
+    }
+    .btn-remove {
+      background:#ccc;
+      border:none;
+      color:#333;
+      border-radius:8px;
+      padding:6px 10px;
+      margin-top:5px;
+      cursor:pointer;
+    }
+    button {
+      margin-top:20px;
+      width:100%;
+      background:#ff5c8a;
+      color:white;
+      border:none;
+      padding:12px;
+      border-radius:10px;
+      font-size:16px;
+      cursor:pointer;
+      transition:0.3s;
+    }
+    button:hover {background:#ff3e70;}
   </style>
 </head>
 <body>
-  <div class="notification" id="notifBox">
-    💖 10.000 dari <strong>Seseorang</strong> Kak Niccy Kak Niccyyy jangan lupa joki lagi di deepstoreid yaaa!!!
-  </div>
-  <audio id="notifSound" src="https://www.myinstants.com/media/sounds/discord-notification.mp3" preload="auto"></audio>
+  <form id="absenForm">
+    <h2>ABSEN HARIAN PRINSES KU 💖</h2>
+
+    <label for="mood">Mood hari ini:</label>
+    <select id="mood" required>
+      <option value="">Pilih mood...</option>
+      <option>Senang</option>
+      <option>Capek</option>
+      <option>Ngantuk</option>
+      <option>Stres</option>
+      <option>Tenang</option>
+      <option>Bahagia</option>
+    </select>
+
+    <label for="makan">Makan apa hari ini?</label>
+    <textarea id="makan" rows="2" placeholder="Contoh: Nasi goreng + teh manis" required></textarea>
+
+    <label for="foto">Absen foto:</label>
+    <input type="file" id="foto" accept="image/*" required>
+
+    <div class="preview" id="preview"></div>
+
+    <button type="submit">Kirim Absen 💌</button>
+  </form>
 
   <script>
-    function showNotification() {
-      const notifBox = document.getElementById("notifBox");
-      const notifSound = document.getElementById("notifSound");
+    const fileInput = document.getElementById("foto");
+    const previewDiv = document.getElementById("preview");
+    let currentBase64 = "";
 
-      notifBox.style.display = "block";
-      notifSound.play();
+    // Tampilkan preview begitu user pilih foto
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if (!file) return;
 
-      setTimeout(() => {
-        notifBox.style.display = "none";
-      }, 10000);
-    }
+      const reader = new FileReader();
+      reader.onloadend = function() {
+        currentBase64 = reader.result;
+        previewDiv.innerHTML = `
+          <img src="${reader.result}" alt="Preview foto">
+          <br>
+          <button type="button" class="btn-remove" id="removeBtn">Hapus / Ganti Foto</button>
+        `;
+        document.getElementById("removeBtn").onclick = () => {
+          fileInput.value = "";
+          currentBase64 = "";
+          previewDiv.innerHTML = "";
+        };
+      };
+      reader.readAsDataURL(file);
+    });
 
-    // Tampilkan notifikasi 3 detik setelah masuk ke web
-    window.onload = function () {
-      setTimeout(showNotification, 1000);
-    };
+    // Kirim data ke email
+    document.getElementById("absenForm").addEventListener("submit", function(e){
+      e.preventDefault();
+
+      if(!currentBase64){
+        alert("Upload foto dulu ya 💖");
+        return;
+      }
+
+      const data = {
+        mood: document.getElementById("mood").value,
+        makan: document.getElementById("makan").value,
+        foto: currentBase64
+      };
+
+      emailjs.send("service_ti29gts", "template_48qiouv", data)
+      .then(() => {
+        alert("Absen terkirim ke email kamu 💖");
+        e.target.reset();
+        previewDiv.innerHTML = "";
+        currentBase64 = "";
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Terjadi kesalahan saat mengirim.");
+      });
+    });
   </script>
-
 </body>
 </html>
