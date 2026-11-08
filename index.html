@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taman Lily Kita 🌸</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;800&family=Chewy&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Efek kelopak jatuh, hati, dan kilau -->
+  <canvas id="fx" aria-hidden="true"></canvas>
+
+  <!-- Pengaturan awal: nama & tanggal -->
+  <div class="modal" id="welcome" hidden>
+    <form class="card setup" id="setupForm">
+      <div class="setup-lily" id="setupLily"></div>
+      <h2>Yuk bikin taman kita! 🌷</h2>
+      <label>Nama kamu
+        <input id="nameA" maxlength="14" required placeholder="mis. Aku">
+      </label>
+      <label>Nama pasanganmu
+        <input id="nameB" maxlength="14" required placeholder="mis. Kamu">
+      </label>
+      <label>Tanggal jadian / pertama ketemu
+        <input id="since" type="date" required>
+      </label>
+      <button class="btn" type="submit">Mulai ✨</button>
+    </form>
+  </div>
+
+  <!-- Dialog harapan saat menanam lily -->
+  <div class="modal" id="wishModal" hidden>
+    <form class="card setup" id="wishForm">
+      <h2>Tulis harapan untuk lily ini 🌱</h2>
+      <input id="wishInput" maxlength="80" placeholder="mis. Semoga kita liburan bareng ke Bali 🏝️">
+      <div class="row">
+        <button class="btn" type="submit">Tanam! 🌷</button>
+        <button class="btn ghost" type="button" id="wishSkip">Lewati</button>
+      </div>
+    </form>
+  </div>
+
+  <header class="topbar">
+    <a href="#hero" class="logo">🌸 <span id="logoNames">Lily Kita</span></a>
+    <nav>
+      <a href="#counter">Waktu</a>
+      <a href="#garden-sec">Taman</a>
+      <a href="#reasons">Alasan</a>
+      <a href="#oracle-sec">Ramalan</a>
+      <a href="#memories">Kenangan</a>
+      <a href="#letter-sec">Surat</a>
+    </nav>
+    <div class="tools">
+      <button id="soundBtn" class="icon-btn" aria-label="Suara">🔊</button>
+      <button id="editBtn" class="icon-btn" aria-label="Ubah nama dan tanggal">✏️</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="hero" class="hero">
+      <div class="bubble" id="heroBubble">Colek aku dong~ 👉</div>
+      <div class="hero-lily" id="heroLily"></div>
+      <h1 class="title">
+        <span id="nameAText">Kamu</span>
+        <span class="amp">&amp;</span>
+        <span id="nameBText">Aku</span>
+      </h1>
+      <p class="subtitle">Taman lily kecil untuk cinta kita 💕</p>
+      <a href="#counter" class="btn">Jelajahi ↓</a>
+    </section>
+
+    <!-- HITUNG WAKTU -->
+    <section id="counter" class="sec reveal">
+      <h2 class="sec-title">Sudah Bersama 💞</h2>
+      <p class="sec-sub" id="countNote">Setiap detik bersamamu berharga~</p>
+      <div class="count-grid">
+        <div class="count-box b1"><span id="cDays">0</span><small>hari</small></div>
+        <div class="count-box b2"><span id="cHours">0</span><small>jam</small></div>
+        <div class="count-box b3"><span id="cMins">0</span><small>menit</small></div>
+        <div class="count-box b4"><span id="cSecs">0</span><small>detik</small></div>
+      </div>
+      <p class="pill" id="countMonths"></p>
+    </section>
+
+    <!-- TAMAN LILY -->
+    <section id="garden-sec" class="sec reveal">
+      <h2 class="sec-title">Taman Lily 🌱</h2>
+      <p class="sec-sub">Ketuk tanahnya untuk menanam lily. Ketuk lily untuk baca harapannya!</p>
+      <div class="garden" id="garden">
+        <div class="sun"></div>
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div class="garden-msg" id="gardenMsg">
+          <span id="gardenMsgText"></span>
+          <button id="gardenMsgRm" type="button" title="Cabut lily ini">🗑️</button>
+        </div>
+        <div class="lilies" id="lilies"></div>
+        <div class="ground" id="ground"><span class="hint">tap di sini untuk menanam 🌱</span></div>
+      </div>
+      <div class="garden-bar">
+        <button id="waterBtn" class="btn small">💧 Siram</button>
+        <button id="clearBtn" class="btn small ghost">🧹 Bersihkan</button>
+        <span id="gardenCount" class="pill">0 lily</span>
+      </div>
+    </section>
+
+    <!-- ALASAN -->
+    <section id="reasons" class="sec reveal">
+      <h2 class="sec-title">Alasan Aku Sayang Kamu 🥹</h2>
+      <p class="sec-sub">Ketuk kartunya untuk membalik~</p>
+      <div class="cards" id="reasonCards"></div>
+      <form class="inline-form" id="reasonForm">
+        <input id="reasonInput" maxlength="70" placeholder="Tambah alasan baru…" required>
+        <button class="btn small" type="submit">Tambah ➕</button>
+      </form>
+    </section>
+
+    <!-- RAMALAN KELOPAK -->
+    <section id="oracle-sec" class="sec reveal">
+      <h2 class="sec-title">Ramalan Kelopak 🔮</h2>
+      <p class="sec-sub">Cabut kelopaknya satu-satu, lihat apa katanya!</p>
+      <div class="oracle" id="oracle"></div>
+      <p class="oracle-text" id="oracleText">Cabut kelopaknya satu-satu~</p>
+      <button class="btn small" id="oracleReset" hidden>Mekar lagi 🌷</button>
+    </section>
+
+    <!-- KENANGAN -->
+    <section id="memories" class="sec reveal">
+      <h2 class="sec-title">Album Kenangan 📸</h2>
+      <p class="sec-sub">Simpan momen-momen manis kalian di sini.</p>
+      <form class="mem-form card" id="memForm">
+        <input id="memDate" type="date" required>
+        <input id="memTitle" maxlength="40" placeholder="Judul momen" required>
+        <textarea id="memText" rows="2" maxlength="200" placeholder="Ceritanya apa nih?"></textarea>
+        <button class="btn small" type="submit">Simpan 💾</button>
+      </form>
+      <div class="timeline" id="timeline"></div>
+    </section>
+
+    <!-- SURAT -->
+    <section id="letter-sec" class="sec reveal">
+      <h2 class="sec-title">Surat Cinta 💌</h2>
+      <p class="sec-sub" id="envHint">Ketuk amplopnya~</p>
+      <div class="envelope" id="envelope" role="button" tabindex="0" aria-label="Buka amplop">
+        <div class="env-back"></div>
+        <div class="env-paper"></div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="seal">💗</div>
+      </div>
+      <div class="letter-card" id="letterCard">
+        <div class="letter-paper"><p id="letterText"></p></div>
+      </div>
+      <details class="edit-letter">
+        <summary>✏️ Tulis ulang suratnya</summary>
+        <textarea id="letterInput" rows="7"></textarea>
+        <button class="btn small" id="saveLetter" type="button">Simpan surat 💾</button>
+      </details>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Dibuat dengan 💕 dan banyak kelopak lily</p>
+    <small>Psst… coba ketik <b>lily</b> di keyboard 🤫</small>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
